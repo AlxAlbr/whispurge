@@ -1,0 +1,2197 @@
+<!--
+
+<Whispurge, outil de correction des transcriptions issues de Whisper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+    contact : alber@univ-tours.fr
+-->
+
+<html lang="fr" style = "scroll-behavior: smooth"; >
+
+<title> WhisPurge </title>
+
+<link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet">
+
+<link rel="icon" type="image/png"   href="logoWh.PNG"  />
+
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+
+    <!-- gestion des fichiers !-->
+    <script src="WHSPRG\FileSaver.js"></script>
+    <script type="text/javascript" src="WHSPRG\encoding-indexes.js"></script>
+    <script type="text/javascript" src="WHSPRG\encoding.js"></script>
+    <script src="WHSPRG\Export.js"></script>
+    
+   
+   <!-- <script src="https://unpkg.com/peaks.js/dist/peaks.js"></script> -->
+     
+ 
+
+    <!-- images boutons 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    -->
+
+
+    <LINK href="WHSPRG\CSS\Styles.css" rel="stylesheet" type="text/css">
+ 
+
+
+    <!-- BOOTSTRAP Les fichiers sont à la racine du site pour pouvoir être utilisé hors ligne-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="WHSPRG\CSS\Bootstrap\bootstrap.css">
+    <!-- <script type="text/javascript" src="jQuery.3.5.1.js"></script> !-->
+    <script type="text/javascript"  src="WHSPRG\popper.min.js"></script>
+    <script type="text/javascript" src="WHSPRG\JS\bootstrap.bundle.min.js"></script>
+
+    <script  src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+
+
+    <link rel="icon" type="image/png"   href="" />
+     
+
+    
+</head>
+
+<body >
+
+
+<div class="header" id="hautpage">
+
+    
+
+      
+    <div id="processing" class="process" style="display: none;z-index:0" >
+        <div class="spin"></div>
+        <div id = "lblwait" class="lblspin" >Chargement en cours. Merci de patienter </div>
+
+    </div>
+
+  
+
+    <!--  <div style="bottom:2%;position:fixed; font-size: 10px;margin-left: 50%; color:rgb(92, 92, 155);">  <img src="Images\univtours-logo-horizontal.jpg" height="25px" width="70px" alt='Université de Tours'><br> Alex Alber - 2020 </div>  -->
+
+
+
+
+    <div id="entete" >
+        <h1 onclick="location.reload()"; style= "position:relative;float:left;font-size: 1.7rem;z-index:2;padding-top: 10px;margin-left:10px;color:#2E73D8"> WhisPurge </h1>
+        <label style="position:absolute;top:52px;left:15px;font-size:10px;color:rgb(92, 92, 155);"> v.0.0.2</label>
+
+        <img id = "imgpanfich" src="WHSPRG\IMG\logofich.png" class= 'dnone'  alt=""  style= "position:relative;float:left;margin-left:20px;margin-top: 12px;" onclick="panfich('100%','block')">
+
+        <!---->
+   
+
+
+        <audio id = "lecteur" controls style = "position:fixed; left:16.6%;width:66.6%;top:12px; display: none";>
+            <source id = "sourceLecteur" src="" type="audio/mp3">
+             
+          Il serait temps de mettre à jour votre navigateur internet!.
+          </audio> 
+
+
+          
+
+         
+ 
+
+          
+
+         <div id = "menu_rec" class="btnfonction dnone" style="padding-right:30px"  ><img src="WHSPRG\IMG\dwnload.png" style="height: 30px;margin-left: 6px;margin-right: 30px;"><label class='txtbtn' id="lblsauv"  > Export </label>
+            
+            <div class="menudrlnt" id = "menuexport"  >
+                <a> <label class = "lblmnuxprt"   onclick="enregistrer()" > *.Purge (sauvegarde)</label> <br> </a>
+                <a> <label class = "lblmnuxprt"   onclick="exportWord()">  *.docx (Word, Writer)</label></a>
+                <a> <label class = "lblmnuxprt"  onclick="exportSonal()">  *.rtr (Sonal)</label></a>
+                 
+            </div>
+
+        </div>            
+
+            
+     
+
+        <div id = "vit_lect" class = "dnone">
+          <label id= "btnspdp" class = "btnfonction  btnspd"  onclick=" vitesselecteur('+')"> + </label>
+          <label id= "lblspd" class = "   btnspd"  style= "font-size: 0.9rem; color:white;padding-top: 10px;" onclick=" vitesselecteur('=')"> x 1.0 </label>
+          <label id= "btnspdp" class = "btnfonction  btnspd"   onclick=" vitesselecteur('-')"> - </label>
+         </div>
+
+          <br>
+
+         
+
+            
+            
+<!--
+             <div  class="btnfonction" onclick="DefNA()"><label class='txtbtn'>Fonction</label></div> 
+
+              ="redefModaO()" "trimModa()" DefNA()!-->
+
+  
+
+           
+</div>
+
+    </div>
+
+
+
+    </div>
+
+    <div style="clear:both;"></div>
+
+
+
+
+    <div class="panneaufichiers" id = "accueil" style="display:flex;flex-direction: column;position:relative;z-index:0">
+      
+        <!-- <a href="javascript:void(0)" class="closebtn" onclick="hidepanfich()">×</a>
+
+        <label style="font-family: 'Faster One';font-size: 5rem; position:relative;float:left;color:#9f9c9c;">W </label>
+
+        !-->
+        
+        <div id = "selfichiers" class="selfich" >
+
+            <p class="intertitre">Chargez vos fichiers</p>
+            
+            
+            <label class="btnfonction btngeant" id = "btnfichtext"  for="ficherText" >
+                
+                <img src="WHSPRG\IMG\textload.png" class= 'logobtn'  alt="">
+                
+                <label class='lblfich' id="lbltext" for="ficherText" style="top:110px "> Sélectionnez ou déposez un fichier de transcription </label> 
+                <label class='lblfich'  for="ficherText" style="top:140px;color:rgb(92, 99, 96)" >  (*.srt, *.vtt, *. json, *.Purge) </label> 
+
+                <input type="file" id="ficherText"  name="Txtfile" style="display:none" onchange='chargeText(event)'  accept='.txt, .srt, .json, .purge, .vtt'   />
+                
+                
+
+            </label>
+        
+        
+ 
+         
+        
+            <label class="btnfonction btngeant" id = "btnfichaudio"   >
+                <img src="WHSPRG\IMG\audioload.png" class= 'logobtn'   alt="">
+                
+                <label class='lblfich ' id="lblaudio" for="ficherSon" style="top:110px;" > Sélectionnez ou déposez un fichier son  </label> 
+                <label class='lblfich '  for="ficherSon" style="top:140px;color:rgb(92, 99, 96)"> (*.mp3, .Wav, *.m4a ...) </label> 
+                
+                <input type="file" id="ficherSon"  name="file"  style="display:none" onchange='chargeAudio(event)'  accept='.mp3, .wav, .m4a'   />
+                
+                
+
+            </label>
+
+        </div>
+        <br>
+        <br>
+        <div class = "dnone">
+        <h1 style="text-align: center;"> En savoir plus </h1>
+        <a>
+            Whispurge est un outil de correction et de remise en forme des retranscriptions issues de retranscriptions automatiques.
+        </a>
+        </div>
+
+    </div>  
+
+
+     
+
+
+
+
+<div class="container-fluid fondgris" id='fondpage' style="position:relative;top:90px" onclick="">
+
+            <!--==========================================================================================
+             Bloc Options
+             ==========================================================================================-->
+    
+             <div id='panneau-g' class="col-sm-2" style="border-right: 1px solid rgb(200,200,200);max-width:16%;margin-left:-10px;position:fixed ">  
+
+                <H2 id="lbldetails">Détails</H2>
+                
+                 <label id ="lblpos">  --- </label> <br>
+   
+                <label id = "idseg" style="display:none"></label> 
+
+                <label id = "btnsplit" class='btnfonction btnlarge' style = "margin-top : 20px ; margin-bottom: 50px;"; onclick="SplitSeg()">Diviser segment</label> 
+
+   
+                
+                <H2>Qui parle?</H2> 
+                   
+             
+                <div id="locuteurs"></div>
+                 
+                <label id = "btncompact" class='btnfonction btnlarge' style = "margin-top : 20px"; onclick="compactSegs()">Compacter tous les segments</label> 
+   
+                 
+              
+   
+           </div>
+
+    
+    
+    
+    <div class="row fondgris">
+
+
+       
+
+
+
+    <div id='contenu' class="col-sm" style="position:relative;max-width: 66.66%;margin-left:16.6%;background-color: #00000000;color: #000000;" >
+    
+        
+        
+      
+        
+        
+        <div id="segmentssuivants"></div>
+    
+    </div>
+
+    <canvas id="cnvGetLar" style="display:none"></canvas> 
+
+
+    </div>
+</div>
+
+<div id="piedpage" class="footer dnone"> 
+
+</div>
+
+<div id="testlong"></div> <!-- div servant à estimer la largeur des chaînes de caractères ( pour ajustements de largeur dans les canvas )-->
+
+
+<!--
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/!-->
+
+<!-- Scripts du site -->
+ 
+<script> 
+
+// Avertissement en cas de sortie sans sauvegarde
+window.onbeforeunload = function() {
+    
+    return "Des modifications peuvent ne pas être enregistrées";
+  
+ };
+
+
+// déclaration des variables 
+
+var fichText ; // adresse du fichier texte
+var nomFichText; // nom du fichier texte (pour sauvegarde)
+var lignesFich = []; // tableau de mémorisation des lignes des fichiers lus (SRT, VTT, Purge...)
+var objectURL; // pour mémorisation de l'adresse des fichiers lus
+var SGMTS; // variable de tableau accueillant les segments
+var seg_cur = 0; // segment courant (le premier par défaut) 
+var loc_cur = 1;
+var dsTxtArea = false; // repérer la position du curseur dans la fenêtre de texte
+var scrlY = 0; // mémorisation de la position du scroll
+var seg_lu = 0 // segment en cours de lecture
+var textok =false; 
+var audiook = false;
+
+// déclaration du tableau multidimensionnel des segments
+TabSeg = [];
+
+// tableau des locuteurs 
+var locut = ['','Question?','Réponse','Réponse 2'];
+ 
+
+// définition du lecteur
+var audio = document.getElementById('lecteur');
+
+ 
+ 
+
+
+
+function chargeAudio(event) {
+
+var fichAudio =""
+
+var input = event.target;
+var fichiers = event.target.files;
+ fichAudio = input.files[0];
+
+openAudio(fichAudio);
+
+ 
+
+ 
+
+
+
+}
+
+function openAudio(file){
+    objectURL = URL.createObjectURL(file);
+
+//var audio = document.getElementById('lecteur');
+
+var source = document.getElementById('sourceLecteur');
+source.src = objectURL;
+
+audio.load(); 
+audio.playbackRate = 1;
+
+document.getElementById('lblaudio').innerText=file.name ; 
+document.getElementById('btnfichaudio').classList.add('btngeant_ok');
+document.getElementById('lecteur').style.display="block";
+audiook=true;
+checkok();
+
+};
+
+
+function chargeText(event) {
+
+var fichText =""
+
+var input = event.target;
+var fichiers = event.target.files;
+
+fichText = input.files[0]
+nomFichText =  input.files[0].name;
+
+let detailsf = dossfichext(nomFichText)
+
+let extens = String(detailsf[2]) // récupération de l'extension
+const ext = extens.toUpperCase();
+ 
+
+ 
+switch(ext) {
+                   
+    case '.JSON':
+    
+    openJson(fichText);
+
+    break;
+
+    case ".PURGE":
+    case ".SRT":
+    case ".VTT":   
+    openFich(fichText,ext);
+    
+    break;
+
+    };
+
+    
+
+    
+
+};
+
+function lireDrag(files) {
+
+ 
+
+    for (var i = 0; i < files.length; i++) {
+
+    nomFichText =  files[i].name;
+
+    let detailsf = dossfichext(nomFichText)
+
+    let extens = String(detailsf[2]) // récupération de l'extension
+    const ext = extens.toUpperCase();
+     
+
+
+    switch(ext) {
+                   
+                   case '.JSON':
+                   
+                   openJson(files[i]);
+
+                   break;
+               
+                   case ".PURGE":
+                   case ".SRT":
+                   case ".VTT":   
+                   openFich(files[i],ext)
+                   
+                    break;
+               
+                    case '.MP3':
+                    case '.WAV':
+                    case '.M4A':        
+
+                    openAudio(files[i]);
+                    break;
+
+                   };
+    
+    
+
+
+    }
+
+
+}
+
+
+var openFich = function(fich,ext) {
+
+
+    //wait("Chargement en cours. Merci de patienter "); // affichage de l'indicateur de chargement
+    //var input = event.target;
+    lignesFich=[];  // vidage du tableau
+
+
+    var reader = new FileReader();
+        
+        reader.onload = function(){
+        var text = reader.result;
+
+        text = text.replace(/\r?\n|\r/,'\n') // uniformisation des sauts de ligne
+        // split du texte par lignes \n
+        lignesFich = text.split("\n");
+
+        };
+
+    reader.readAsText(fich);
+
+    reader.onloadend = function() {
+         
+
+    switch (ext) {
+
+        case ".PURGE" :
+            
+            PURGEtoTABSEG();
+            affSegments(0);
+            chargeLocut();
+            //selSegment(seg_cur,false);
+            break;
+
+        case ".SRT":
+        case ".VTT":
+            SRTtoTABSEG();
+            Phrasifier();
+            convertSpeaker();
+            affSegments(0);
+            chargeLocut();
+            break;
+    };
+
+
+    document.getElementById('lbltext').innerText=nomFichText ; 
+    document.getElementById('btnfichtext').classList.add('btngeant_ok');
+    textok=true;
+    checkok();
+     
+}
+
+
+
+
+
+
+//endWait()
+
+};
+
+function openJson(fich){
+   
+    objectURL = URL.createObjectURL(fich);
+
+  var request = new XMLHttpRequest();
+
+  request.open("GET", objectURL);
+  //request.responseType = "json";
+  request.responseType = "text";
+  request.send();
+
+  request.onload = function () {
+  var SGMTSText = request.response;
+  SGMTS  = JSON.parse(SGMTSText);  
+
+  };
+
+
+  request.onloadend = function () {
+ 
+  JSONtoTABSEG();
+  Phrasifier();
+  convertSpeaker();
+  affSegments(0)
+  chargeLocut()
+
+};
+
+document.getElementById('lbltext').innerText=fich.name ; 
+document.getElementById('btnfichtext').classList.add('btngeant_ok');
+textok=true;
+checkok();
+
+}
+
+function JSONtoTABSEG() { // conversion de l'objet JSON en tableau
+
+    var nbseg = SGMTS.segments.length ;
+    TabSeg = new Array(nbseg);
+
+    for (s=0;s<nbseg;s++){
+        TabSeg[s]=  new Array(6);
+    }
+  
+    
+    for (s=0;s<nbseg;s++){
+         
+         
+        TabSeg[s][1]= SGMTS.segments[s].start.toFixed(2) ;
+        TabSeg[s][2]= SGMTS.segments[s].end.toFixed(2);
+        TabSeg[s][3]= ""; // locuteur
+        TabSeg[s][4]= SGMTS.segments[s].text;
+        TabSeg[s][5]= false ; // non sélectionné par défaut
+        TabSeg[s][6]= SGMTS.segments[s].avg_logprob
+        
+        
+    }
+
+    
+
+};
+
+function SRTtoTABSEG() { // conversion du fichier SRT en tableau
+    
+    var nblig = lignesFich.length  ;       
+    let rgSeg=0;
+    TabSeg = new Array (1);
+    TabSeg[rgSeg]=  new Array(6);
+    
+
+    for (s=0;s<nblig;s++){
+         
+        let ligne = lignesFich[s].trim()     
+        
+        let posflèche= ligne.lastIndexOf("-->") // recherche d'un indicateur de coordonnées
+
+        if (posflèche>-1) { // ajout d'un segment
+            
+            TabSeg.push();
+            rgSeg++;
+             
+            TabSeg[rgSeg]=  new Array(6);
+
+            let tps = ligne.split("-->") 
+            let deb = TimeToSec(tps[0])
+            let fin = TimeToSec(tps[1])
+
+            TabSeg[rgSeg][1]= deb  ;
+            TabSeg[rgSeg][2]= fin;
+            TabSeg[rgSeg][3]= ""; // locuteur
+            TabSeg[rgSeg][4]= "" //
+            TabSeg[rgSeg][5]= false ; // non sélectionné par défaut
+            TabSeg[rgSeg][6]= 0; 
+
+        } else {
+        
+            if (ligne=="" || isNaN(ligne)==false) { // évitement des numéros de sous-titre et sauts de ligne
+
+                if (s<nblig-1) {
+
+                    if (lignesFich[s+1].lastIndexOf("-->") > -1){ continue;}               
+                
+                }
+
+             
+            }
+
+            let lignetxt = ligne.replace(/\r?\n|\r/,"") // retrait des sauts de ligne 
+            TabSeg[rgSeg][4]+= lignetxt + " "
+        
+         
+        }
+        
+     
+    }
+
+
+    // suppression du rang 0
+    TabSeg.splice(0,1)
+    
+
+    //"trimage" des portions de texte
+    for (s=0;s<TabSeg.length;s++){
+        
+        let txttrim = TabSeg[s][4].trim();
+        TabSeg[s][4]= txttrim;
+
+    }
+
+}
+
+
+
+
+function VTTtoTABSEG() { // conversion du fichier VTT en tableau
+
+}
+
+function PURGEtoTABSEG() { // converstion d'un fichier PURGE en tabseg
+
+ 
+    //récupération des locuteurs (première ligne)
+    locut =  lignesFich[0].split("\t") ;
+        
+    // récupération du segment courant
+    let lig = lignesFich[1].split("\t") ;
+    seg_cur=lig[1]
+    //seg_lu=lig[1]
+
+    lig = lignesFich[2].split("\t") ;
+    audio.playbackRate = Number(lig[1])
+    document.getElementById("lblspd").innerText = "x " + lig[1];
+    
+    // suppression des premières lignes puis importation
+    lignesFich.splice(0,4);
+
+    var nbseg = lignesFich.length  ;
+    TabSeg = new Array(nbseg);
+
+    for (s=0;s<nbseg;s++){
+        TabSeg[s]=  new Array(6);
+    }
+  
+    
+    for (s=0;s<nbseg;s++){
+        
+        cases = lignesFich[s].split("\t") 
+        
+        TabSeg[s][1]= cases[0]  ;
+        TabSeg[s][2]= cases[1];
+        TabSeg[s][3]= cases[2]; // locuteur
+        TabSeg[s][4]= cases[3] //
+        TabSeg[s][5]= false ; // non sélectionné par défaut
+        TabSeg[s][6]= 0;
+        
+        
+    }
+
+     
+};
+
+
+
+function affSegments(seg){
+
+    document.getElementById("segmentssuivants").innerHTML=` <textarea id="txtseg"  class = "dnone" rows="1" style = "width:66%;position:fixed;" onfocus="dsTxtArea=true;autosize:true"  onfocusout= "dsTxtArea=false;" noscroll></textarea>`;
+
+    // mention du doc en-tête
+    titre = document.createElement('div')
+    titre.innerHTML = "<h3>" + nomFichText + "</h3>";
+
+
+    document.getElementById('segmentssuivants').appendChild(titre)
+
+ 
+
+    // affichage des n segments suivants
+    for (n=seg;n<TabSeg.length;n++){
+
+    if(n>TabSeg.length){ continue;}
+
+
+
+    // création du segment 
+
+
+    segsuiv = document.createElement('div');
+    //segsuiv.id = "sg" + n;  
+
+    let contenu ="";
+    let tclass = "";
+    let quiparle ="";
+     
+    if (TabSeg[n][3] != "" ) { // repérage des questions
+        quiparle = locut[TabSeg[n][3]];
+        
+        if (quiparle) {
+            
+            if (quiparle.indexOf("?")>-1) {  
+            tclass = "qst"
+            quiparle = quiparle.replace("?","")
+            }
+            
+        }   
+    }
+    
+
+    if (n>0) { // Ajout du locuteur
+        if (TabSeg[n][3] != TabSeg[n-1][3] && TabSeg[n][3] != "" ) {
+            contenu += `<H4>` +  quiparle +`</H4>`
+                    
+        }
+    } else {
+
+        if (TabSeg[n][3] != "" ) {
+            contenu += `<H4>` + quiparle +`</H4>`
+             
+             
+        }
+
+    }
+
+
+
+    contenu += `<div style="display:inline-flex;"><label id="pl` + n + `" class = " playr arrow-right " onclick="seg_cur=`+ n + `;selSegment(` + n + `,false);poslecteur(TabSeg[`+ n + `][1])" style = "cursor: pointer; "></label>` 
+    
+    contenu += `<label contenteditable=false id="sg` + n + `" class = "lblseg  ` + tclass + `" onclick="seg_cur=`+ n + `;selSegment(` + n + `,false);poslecteur(TabSeg[`+ n + `][1])"  ondblclick="seg_cur=`+ n + `;selSegment(` + n + `,true)" style = "cursor: pointer; ">` +   TabSeg[n][4]  + `</label>
+    </div>`;
+
+    // éclatement du segement
+
+    var tabmots = TabSeg[n][4].split(" ")
+    let chaine ="";
+
+    let tbm;
+
+    for (tbm=0;tbm<tabmots.length;tbm++){
+    chaine +=`<span>` + tabmots[tbm] + ` </span>`
+    }
+    contenu += `<br>`+ chaine ;
+
+    segsuiv.innerHTML = contenu;
+
+
+    document.getElementById('segmentssuivants').appendChild(segsuiv)
+    }
+
+    mefSegLu(seg_lu); // mise en forme du segment en cours de lecture
+
+};
+
+
+function selSegment(seg,edit){
+
+    if (seg<0){seg=0};
+    if (seg>=TabSeg.length) {seg= TabSeg.length-1}
+    
+    
+
+ 
+
+    // retrait des sélecteurs partout
+    const collection = document.querySelectorAll('.lblseg');
+
+    collection.forEach(btnloc => {
+    btnloc.classList.remove('segselect');
+    });
+
+    
+
+    let nom = String("sg" + (seg));// sélection désélection
+    TabSeg[seg][5]=true;
+    document.getElementById(nom).classList.add('segselect');
+
+    
+    
+
+    
+
+    // affichage détaillé du segment courant 
+    document.getElementById('lbldetails').textContent = 'Segment ' + (seg +1) + '/' + TabSeg.length;
+    document.getElementById('lblpos').textContent = SecToTime(TabSeg[seg][1]) + " - " + SecToTime(TabSeg[seg][2]) 
+    document.getElementById('txtseg').value = TabSeg[seg][4];   
+    
+    if (edit==true){ 
+        document.getElementById('txtseg').classList.remove("dnone")
+        poslecteur (TabSeg[seg][1]);
+        /*document.getElementById(nom).contentEditable =true;
+        document.getElementById(nom).style.backgroundColor="white"
+        dsTxtArea=true;*/
+    } else {
+        document.getElementById('txtseg').classList.add("dnone")
+        /*document.getElementById(nom).contentEditable =false;
+        document.getElementById(nom).style.backgroundColor="none"
+        dsTxtArea=false;*/
+    }
+
+     
+    // affichage du locuteur courant
+
+    let rgloc = TabSeg[seg][3]
+
+    const collec = document.querySelectorAll('.btnloc');
+
+    collec.forEach(btn => {
+    btn.classList.remove('isselloc');
+    });
+
+    if ( TabSeg[seg][3]>0){
+    let nombtnloc = "btnloc" + TabSeg[seg][3]
+    document.getElementById(nombtnloc).classList.add("isselloc")
+    }
+
+    
+
+
+ //'détermination de la position de la ligne  à modifier
+
+    //position du cadre (à déduire)
+    var PosCadre = document.getElementById("contenu").getBoundingClientRect();
+    PosYC = PosCadre.top;
+    PosXC = PosCadre.left;
+
+    // Scroll
+    
+    var scrlY = window.scrollY;
+
+    //position de l'étiquette
+    var nomSeg = String("sg" + (seg));
+    var segmodif = document.getElementById(nomSeg);
+    
+
+    var Pos = segmodif.getBoundingClientRect();
+    var PosY = Number(Pos.top - 5)   ; //Pos.top;
+    var PosX = Number(Pos.left - 10);
+    var PosH = Number(Pos.height)  + 10;
+    var PosW = Number(Pos.width + 30);
+
+    //document.getElementById("info").innerText = "pos du seg : " + PosY + " /n pos du scroll : " + scrlY + " /n pos du cadre : " + PosYC;
+
+    
+
+   
+    // positionnement de la zone de texte     
+    var txtmdf = document.getElementById('txtseg');
+    txtmdf.style.top = PosY  ;
+    txtmdf.style.left = PosX   ;
+    txtmdf.style.height = PosH;
+   // txtmdf.style.width = PosW;
+    txtmdf.focus()
+    //txtmdf.select()
+
+
+
+    // évitement de la sortie de l'écran
+    var ht = window.innerHeight;
+    if (PosY>ht -120) {
+        document.body.scrollTop = document.body.scrollTop + ht - 210;
+    }   
+
+    if (PosY<0) {
+        document.body.scrollTop = document.body.scrollTop + PosY;
+    } 
+
+
+
+}
+
+function SplitSeg(){
+
+    let  pscr = posCurs();
+    let txt = txtArea();
+    
+    let txtav = txt.slice(0,pscr)
+    let txtap = txt.slice(pscr)
+            
+    if (txtap.trim()==""){return 0;}
+
+            // définition proratisée de la position (il faudra créer une variable définissant la position exacte liée au clic sur le bandeau zoomé)
+            let prorata = Number(TabSeg [seg_cur][1]) + Number(txtav.length / txtArea().length) * (TabSeg [seg_cur][2]-TabSeg [seg_cur][1]) 
+             
+            prorata=prorata.toFixed(2);  
+            
+            let finseg = TabSeg [seg_cur][2]
+            TabSeg [seg_cur][2] = prorata;  
+            TabSeg [seg_cur][4] = txtav;  
+
+            
+                // création du nouveau segment
+            TabSeg.splice(seg_cur+1,0,prorata)
+            TabSeg [seg_cur+1] = new Array(6);
+            TabSeg [seg_cur+1][1] = prorata;
+            TabSeg [seg_cur+1][2] = finseg;
+            TabSeg [seg_cur+1][3] = ""; // locuteur (par défaut l'autre, s'il y en a 2? )
+            TabSeg [seg_cur+1][4] = txtap;
+            TabSeg [seg_cur+1][5] = false; // sélectionné 
+
+            seg_cur++;
+            
+            affSegments(0);
+            
+
+
+
+
+}
+
+function Phrasifier(){ // petite fonction visant à regrouper les segments en phrases 
+
+    var nbseg = TabSeg.length ;
+    const finPhrase = new Set(['.', '?', '!'])
+    var asquizzer = [];
+
+
+    
+    for (s=0;s<TabSeg.length- 1;s++){
+        
+        const str = TabSeg[s][4];
+        var endtxt = str.slice((str.length-1));
+        const estFin = finPhrase.has(endtxt) ;
+
+        if (estFin==false) {
+            //concaténation des séquences 
+
+            fusionSegs(s)
+            s --;
+        }
+
+        
+    }
+
+    affSegments(0)
+
+}
+
+function compactSegs(){ // fonction compactant tous les segments d'un même locuteur
+ 
+    
+    // changement de locuteur le plus avancé
+    let derchg;
+
+    for (s = TabSeg.length-1;s>-1;s--){
+
+        if (TabSeg[s][3] != TabSeg[s-1][3]){
+            derchg=s;
+            break;
+        }
+
+    }
+
+   
+
+    let debut=-1;
+    
+
+    let loc = "init"
+    
+    for (s=0;s<derchg;s++){
+
+        if (TabSeg[s][3] != "" && TabSeg[s][3] != loc ){ // il y a changement de locuteur
+            
+           
+
+            loc = TabSeg[s][3] ;
+
+            if (debut<0){ // s'il n'y a pas de début défini
+                
+                debut=s;
+                
+
+            } else { // s'il y a déjà un début, alors c'est la fin
+                fin = s
+                
+
+                if (fin-debut > 1) {
+
+                  
+                    // empilement de tous les segments sur le premier
+
+                    for (s2=debut+1;s2<fin;s2++){
+
+                        // fusion des textes
+                        let str = TabSeg[debut][4] 
+                        let endtxt = str.slice((str.length-1));
+                        let spc = "";
+
+                        if (endtxt != " ") { spc = " "} // si pas d'espace à la fin du segment de début > ajout
+
+                        TabSeg[debut][4] += spc + TabSeg[s2][4]; 
+                        
+                        TabSeg[debut][2] = TabSeg[s2][2];
+
+                        TabSeg[s2][4] =""; //vidage du segment
+                    }
+
+
+
+                    
+                    
+
+                }
+
+                debut = s; 
+            }
+
+            
+        }  
+
+
+
+    }
+    
+    // effacement des segments vidés
+    
+    for (s=0;s<TabSeg.length;s++){
+
+        if (TabSeg[s][4]=="") {
+            //alert("il faut supprimer la ligne "+ s)
+            TabSeg.splice(s,1);
+            s--;
+            seg_cur--;
+        }
+
+    }
+
+    affSegments(0);
+    selSegment(seg_cur,false);
+
+
+}
+
+
+function fusionSegs(seg){
+
+     
+    TabSeg[seg][4] = TabSeg[seg][4] + TabSeg[seg+1][4]; // fusion des textes
+    TabSeg[seg][2] = TabSeg[seg+1][2];
+
+    TabSeg.splice(seg+1,1);
+    
+
+}
+
+function dessinChunks(){
+// fonction permettant de générer un canvas représentant, sur une ligne horizontale, la structure de l'entretien
+
+}
+
+ 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// GESTION LOCUTEURS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+function chargeLocut(){
+
+    var divloc = document.getElementById('locuteurs');
+
+    divloc.innerHTML="";
+
+    let txthtml = ""
+
+    for (loc=1;loc < locut.length;loc++){
+        
+        txthtml += `<div>
+            <label id = "btnloc` + loc + `" class="btnfonction btnloc btnlarge"  onclick= "selLoc(`+ loc +`); affectLoc(`+ loc +`)" type="button" ;  >` + locut[loc]+ `</label>
+            <input type="text" class="txtloc dnone" id=txtloc`+ loc + `  value="`+ locut[loc] + `" onfocus="this.setSelectionRange(0, this.value.length);dsTxtArea=false"   >
+            
+            </div>`
+
+    }
+
+    txthtml += `<label  id = "btnLocPlus" class = "btnfonction btnpetit dnone" style = "position:relative; float:right" onclick="ajoutLocut();modifLocut()"> + </label>`
+    txthtml += `<label id= "btnedit" class = "btnfonction btnpetit" style = "position:relative; float:right; margin-top:5px" onclick="modifLocut()"> ... </label>`
+ 
+    txthtml += `<label id= "btnvalidloc" class = "btnfonction btnlarge dnone" style = "position:relative;margin-top:15px" onclick="validLocut()"> Valider locut.</label>`
+
+    // <button id="BtnEditM" class="btn btn-outline-secondary imgbtn imgpen " onclick="";   type="button" style ="float:right;margin:5px; "></button></div>
+
+    //txthtml += `<br><button id = "btnloc` + loc + ` " class="btn btn-secondary btn-sm "  onclick= "affectloc(`+ loc +`)" type="button" style="height:35px;min-width:280px;margin-top:5px;";  > Ajouter/modifier </button> <br>` 
+
+    divloc.innerHTML = txthtml
+    
+     
+}
+function ajoutLocut(){
+    locut.push("Nouveau (" + locut.length + ")");
+    chargeLocut()
+
+}
+
+function modifLocut(){
+
+    const collection = document.querySelectorAll('.btnloc');
+
+    collection.forEach(btnloc => {
+    btnloc.classList.add('dnone');
+    });
+
+   const collection2 = document.querySelectorAll('.txtloc');
+
+    collection2.forEach(btnloc => {
+    btnloc.classList.remove('dnone');
+    });
+
+    var btn = document.getElementById("btnedit");
+    btn.classList.add('dnone');
+
+    btn = document.getElementById("btnvalidloc");
+    btn.classList.remove('dnone');
+
+    var btn = document.getElementById("btnLocPlus");
+    btn.classList.remove('dnone');
+
+}
+
+function validLocut(){
+
+    
+    const collection2 = document.querySelectorAll('.txtloc');
+
+    collection2.forEach(function(txtloc, index) {
+    
+    let txt =txtloc.value;
+ 
+    
+    if (locut[index] != txt  ) { // si locuteur a été changé
+
+       if (txt.trim() !="") {
+        locut[index+1] = txt
+       } else {
+        locut.splice(index+1,1)
+       }
+
+    };
+
+        
+    });
+
+    chargeLocut();
+    affSegments(0);
+
+}
+
+
+function selLoc(loc){
+
+    //const collection = document.getElementsByClassName(".btnloc");
+    const collection = document.querySelectorAll('.btnloc');
+
+    collection.forEach(btnloc => {
+    btnloc.classList.remove('btncoché');
+    });
+
+    
+
+    let nombtn = String("btnloc" +loc); 
+    var element = document.getElementById(nombtn);
+    element.classList.add('btncoché');
+
+    
+
+    //$(nombtn).addClass('btncoché');
+    
+    
+
+    
+
+}
+
+function affectLoc(loc) {
+  
+
+    TabSeg[seg_cur][3]= loc;
+    //compactSegs()
+    affSegments(0)
+    selSegment(seg_cur);
+
+}
+
+function convertSpeaker() {
+
+    let rgmax = 0;
+    
+    for (s = 0; s< TabSeg.length;s++){
+
+        let txt = TabSeg[s][4]
+
+        let spk = txt.indexOf("Speaker ") // recherche d'un speaker
+
+        if (spk == 0) { // récupération du rang
+
+            let rg = txt.substr(8,1)
+            rg = Number(rg)
+             
+            TabSeg[s][3] = rg +1  //affectation du locuteur
+            if (rgmax < rg+1) {rgmax = rg+1 }; // mémorisation du speaker le plus élevé atteint
+ 
+            //suppression du préfixe "speaker"
+            TabSeg[s][4] = txt.substr(11)
+
+            
+        }
+
+             
+ 
+    };
+
+
+    // mise à jour des noms des locuteurs
+
+    for (loc=1;loc<rgmax +1;loc++){
+        locut[loc] = "Speaker " + loc
+
+    };
+
+ 
+    for (loc=rgmax+1;loc<locut.length+1;loc++){
+        
+        locut.splice(loc,1)
+
+    };
+
+
+
+}
+
+
+
+
+
+
+function poslecteur(pos){
+
+  
+var audio = document.getElementById('lecteur');
+audio.currentTime = Math.floor(pos);
+ 
+audio.play();
+
+
+
+}
+
+function vitesselecteur(sens){
+
+var audio = document.getElementById('lecteur');
+let spdrate  = audio.playbackRate
+ 
+
+
+    if(sens=="=") {spdrate=1.0}
+    if(sens=="+") {spdrate+=0.25}
+    if(sens=="-" && spdrate>0.25) {spdrate-=0.25} 
+
+audio.playbackRate = spdrate;
+document.getElementById("lblspd").innerText = "x " + spdrate;
+
+
+
+}
+
+function SecToTime(time){ // conversion de coordonnées en secondes en hh:mm;ss
+
+    time = Number(time);
+
+    var nbhr = Math.floor(time / 3600);
+    var nbmin = Math.floor((time - nbhr*3600)/60);
+    var nbsec = Math.floor(time - nbhr*3600 - nbmin * 60);  
+
+    nbhr = String(nbhr);
+    nbmin = String(nbmin);
+    nbsec = String(nbsec);
+    
+    
+    
+    
+
+    return nbhr.padStart(2, "0") + ':' + nbmin.padStart(2, '0')  + ':' + nbsec.padStart(2, '0');
+
+
+};
+
+function TimeToSec(time) { // conversion de données hh:mm:ss en secondes
+
+     
+let sspart =  time.split(":");
+
+let pas=0;
+let secs = 0;
+
+
+for (ss=sspart.length-1;ss>-1;ss--) {
+
+     
+    let valeur =  sspart[ss]
+    valeur = valeur.replace(",",".") // remplacement des virgules par des points
+
+    secs += Number(valeur * Math.pow(60,pas))
+    
+    pas++;
+
+}
+
+return secs;
+
+}
+
+
+
+// réactions aux frappes sur le clavier
+document.addEventListener('keydown', (e) => {
+
+    var audio = document.getElementById('lecteur');
+
+    if (e.code === "Space" && dsTxtArea==false) {
+        
+        e.preventDefault();
+     
+        if (audio.paused == true) {
+        
+            // recalage sur le segment le plus avancé en cas de redémarrage de la lecture
+            if (seg_cur > seg_lu) { 
+                
+                audio.currentTime = Number(TabSeg[seg_cur][1] + 0.1);
+            }
+
+            audio.play();
+            e.preventDefault();
+            
+        
+        } else {
+        
+            audio.pause()
+            e.preventDefault();
+        }
+ 
+         
+    }
+
+
+    
+    
+
+
+    if (dsTxtArea==true) { // comportement à l'intérieur de la zone de saisie
+
+        
+            var pscr = posCurs();
+            var txt = txtArea();
+
+            switch (event.code) {
+
+            // Barre d'espace (pilotage de la bande)
+            case "Space" :
+            
+            let carPrec = txt.slice(Number(pscr-1),(pscr))
+            
+            
+            if (carPrec == " ") {
+                if (audio.paused == true) {audio.play();} else {audio.pause()}
+                event.preventDefault();
+            }
+
+            
+
+            break;
+
+            // entrée
+            case "Enter" :
+            case "ArrowDown":
+            
+            if (e.ctrlKey==false) { // validation + passage au suivant
+            
+                if (txtArea().trim()==""){ //suppression des segments vides
+                
+                    TabSeg.splice(seg_cur,1)  
+                    affSegments(0)
+                    selSegment(seg_cur, false)
+                    dsTxtArea=false;
+
+                    break;
+                }
+
+                 
+                if (TabSeg[seg_cur][4] != txtArea()){ TabSeg[seg_cur][6] = TabSeg[seg_cur][4]} // mémorisation des corrections (à des fins d'analyse de la qualité de la transcription automatique )
+                
+                TabSeg[seg_cur][4] = txtArea();  
+                
+                document.getElementById('sg'+seg_cur).innerHTML = txtArea();
+
+
+            } else  { // si ctrl, division du segment
+                
+                SplitSeg()
+
+
+
+            }
+             
+            seg_cur ++;
+            selSegment(seg_cur,false);
+
+            event.preventDefault();
+
+                break;
+            
+            case "ArrowUp":
+            
+            seg_cur --;
+            selSegment(seg_cur,false)   
+            event.preventDefault();
+
+                break;
+            
+                case "Delete":
+                
+                var pscr=posCurs()
+                
+                var txt =txtArea();
+                
+                
+                if (pscr==txt.length) { // suppression à la fin du segment = fusion avec le suivant
+
+                    var posSuiv = Number(TabSeg[Number(seg_cur+1)][1])
+                    
+
+                    fusionSegs(seg_cur);
+                    affSegments(0);
+                    selSegment(seg_cur,true);
+                    event.preventDefault();
+                    poslecteur(posSuiv)
+                }
+
+                break
+                
+                case "Backspace": //délétion au premier caractère du segment, fusion avec le précédent
+                var pscr=posCurs()
+                
+                if (pscr==0 && seg_cur>1){
+
+                    seg_cur--;
+
+                    var posPrec = Number(TabSeg[Number(seg_cur)][1])
+                    
+                    fusionSegs(seg_cur);
+                    affSegments(0);
+                    selSegment(seg_cur,true);
+                    event.preventDefault();
+                    poslecteur(posPrec)
+
+                }        
+
+
+                break
+
+                case "Escape" :
+
+                document.getElementById("txtseg").classList.add("dnone");
+
+                break;
+
+                
+            /*case "ArrowLeft":
+                
+                break;
+            
+            case "ArrowRight":
+            
+                break;
+                */
+
+            }
+
+            
+
+            }
+    
+    else {  // comportement hors de la zone de texte
+
+        
+        switch (event.code) {
+
+            case "Enter" :
+            selSegment(seg_cur,true);
+
+
+
+            event.preventDefault();
+            break;
+
+            case "ArrowDown":
+
+            seg_cur ++;
+            loc_cur = 1 // réinitialisation du rang de locuteur
+            selSegment(seg_cur,false);
+
+            event.preventDefault();
+            break;
+            
+                
+
+            case "ArrowUp":
+
+            seg_cur --;
+            loc_cur = 1 // réinitialisation du rang de locuteur
+            selSegment(seg_cur,false);
+
+            event.preventDefault();
+       
+            break;
+
+            case "ArrowLeft":
+
+                //TabSeg[seg_cur+1][3] = locut[2]   
+                 
+                affectLoc(1);
+                            
+                    
+
+                //seg_cur++;
+                //affSegments(0);
+                //selSegment(seg_cur,false);
+
+                event.preventDefault();
+
+                break;
+
+            case "ArrowRight":
+
+            loc_cur++;
+            
+            if (loc_cur>locut.length-1){loc_cur=1;}
+
+            affectLoc(loc_cur)          
+            
+            //seg_cur++;
+            //affSegments(0);
+            //selSegment(seg_cur,false);
+
+            event.preventDefault();
+
+            break;
+
+            case "KeyG":
+            
+            if (TabSeg[seg_cur][4].indexOf("<b>")>-1) {
+                 
+                TabSeg[seg_cur][4] =  TabSeg[seg_cur][4].replace("<b>","")
+                TabSeg[seg_cur][4] =  TabSeg[seg_cur][4].replace("</b>","")
+                 
+
+            } else {   
+                TabSeg[seg_cur][4] = '<b> ' + TabSeg[seg_cur][4]  + '</b> ';
+                
+            }
+            affSegments(0);
+            event.preventDefault();
+
+            break;
+
+            case "KeyS" : 
+             
+            if (e.ctrlKey==true || e.metaKey){ 
+                
+                enregistrer();               
+            }
+            event.preventDefault();
+
+
+
+        }
+
+
+    };
+
+     
+
+});
+
+
+
+// fonction utilitaires 
+
+// réaction en cas de scroll sur toute la page (tassement du header)
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+
+
+    //récupération de la position du scroll
+    var nvScrl = window.scrollY;
+     
+
+    // récupération de la position de la zone de texte
+    var txta = document.getElementById("txtseg");
+    var Pos = txta.getBoundingClientRect();
+    var PosY = Number(Pos.top);
+    var diff = scrlY - nvScrl;
+    
+    PosY =PosY + diff;
+
+    document.getElementById('txtseg').style.top = PosY;
+    var toppann = document.getElementById('panneau-g').style.top - diff;
+   // document.getElementById('panneau-g').style.top = toppann;
+
+     
+    scrlY = Number(window.scrollY);
+ 
+
+
+}
+
+
+function posCurs(){ // position du curseur dans la fenêtre de sélection
+    var poscur = document.getElementById('txtseg').selectionStart;
+    return Number(poscur);
+}
+
+function txtArea(){
+    var txt = document.getElementById('txtseg').value;  
+    return String(txt);
+}
+ 
+function dossfichext(fich) { // renvoie le dossier, le nom de fichier sans extension, et l'extension d'un fichier
+    var derpoint = fich.lastIndexOf(".");
+    var extens = fich.substr(derpoint);
+    extens = extens.toUpperCase()
+    var derslash = fich.lastIndexOf("/") +1;
+    var fichier = fich.substr(derslash,derpoint - derslash);
+    dossier = fich.substr(0, derslash);
+
+    return [dossier,fichier, extens];
+}
+
+
+//////////////////////////////////////////////////////////////
+// Enregistrer fichiers
+//////////////////////////////////////////////////////////////
+
+
+function enregistrer(){
+// fonction permettant de sauvegarder le travail en cours
+
+    let detailsf = dossfichext(nomFichText)
+
+    SauvegarderSurDisque(SauvPurge(),detailsf[1] + ".Purge", "UTF-8")
+     
+}
+
+function SauvPurge(){
+
+    var TxtFile= "" //nomFichText + "\r\n" + "[Début] \t   [Fin] \t  [locuteur] \t [texte]" ;
+
+    // ajout des locuteurs:
+    TxtFile = "Locuteurs : "  ;
+    for (l=1;l<locut.length;l++){ 
+    TxtFile += "\t" + locut[l];    
+    }
+
+    TxtFile += "\r\nPosition atteinte : \t" + seg_cur ;
+    TxtFile += "\r\nVitesse lecture : \t" + audio.playbackRate;
+
+    TxtFile += "\r\nDébut\tFin\tLocuteur\tTexte\tSlectionné\tTexte initial\r\n" ;
+
+    // ajout des segments
+    for (n=0;n<TabSeg.length;n++){ 
+        
+        let chaineSeg=""
+        
+        for (n2=1;n2<7;n2++) { 
+
+        TxtFile += TabSeg[n][n2] + "\t";
+        }
+
+        chaineSeg = chaineSeg.replace(/\r?\n|\r/,"") // retrait des sauts de ligne
+
+        TxtFile +=  chaineSeg + "\r\n" 
+    }
+
+    
+
+
+    //return TxtFile;
+
+    
+    var textEncoder = new CustomTextEncoder('UTF-8', {NONSTANDARD_allowLegacyEncoding: true})
+    var TxtANSI = textEncoder.encode([TxtFile]);
+
+    return TxtANSI;
+    
+
+}
+
+
+
+
+
+function SauvegarderSurDisque(textToWrite,fileNameToSaveAs, format) {
+
+//wait("Conversion de la base en cours. Merci de patienter.")
+
+if (format != 'UTF-8') {
+    var TxtANSI= ""
+    var textEncoder = new CustomTextEncoder('windows-1252', {NONSTANDARD_allowLegacyEncoding: true})
+
+
+    TxtANSI = textEncoder.encode([textToWrite]);
+    textToWrite = TxtANSI;
+        
+     
+}
+
+var textFileAsBlob = new Blob([textToWrite], {type:'text/csv;charset=windows-1252;'});
+//var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
+var downloadLink = document.createElement("a");
+downloadLink.download = fileNameToSaveAs;
+downloadLink.innerHTML = "Download File";
+if (window.webkitURL != null)
+{
+    // Chrome allows the link to be clicked
+    // without actually adding it to the DOM.
+    downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+}
+else
+{
+    // Firefox requires the link to be added to the DOM
+    // before it can be clicked.
+    downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+    downloadLink.onclick = destroyClickedElement;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+}
+
+downloadLink.click();
+
+//endWait()
+}
+
+
+
+
+function exportWord(){
+
+   
+ 
+    const doc = new docx.Document({
+
+
+    sections: [
+     {
+    properties: {
+
+
+    },
+    children: [
+      new docx.Paragraph({
+        children: [
+           
+          new docx.TextRun({
+            text: nomFichText,
+            bold: true
+          }),
+     ]
+      }),
+      new docx.Paragraph({
+        children: [
+           
+          new docx.TextRun({
+            text: "",
+            bold: true
+          }),
+     ]
+      }),
+      new docx.Paragraph({
+        children: [
+           
+          new docx.TextRun({
+            text: "Exporté par whispurge : www.sonal-info.com/whispurge.html", 
+           italics : true
+          }),
+     ]
+      }),
+
+      new docx.Paragraph({
+        children: [
+           
+          new docx.TextRun({
+            text: "", 
+            
+          }),
+     ]
+      }),
+      new docx.Paragraph({
+        children: [
+           
+          new docx.TextRun({
+            text: "---", 
+            
+          })
+     ]
+      }),
+      new docx.Paragraph({
+        children: [
+           
+          new docx.TextRun({
+            text: "", 
+            
+          })
+     ]
+      })
+      
+    ]
+  }
+]
+
+});
+
+  
+
+
+
+for (s=0;s<TabSeg.length;s++){
+
+// défintion du locuteur
+
+var loc = "" 
+if (locut[TabSeg[s][3]]){loc= locut[TabSeg[s][3]]}
+var changeloc = false
+if (s>0 && TabSeg[s][3]!=TabSeg[s-1][3]) {
+    changeloc = true 
+}
+
+if (s==0) {changeloc = true }
+
+var italouinon=false
+// italouinon
+if (loc.indexOf("?")>-1){italouinon=true}
+loc = loc.replace("?","") ;
+loc += " : ";
+
+// ajout du locuteur
+if (changeloc==true){
+    doc.addSection({
+    properties: {
+            type: docx.SectionType.CONTINUOUS
+            },
+
+    children: [ 
+    new docx.Paragraph({
+        children: [
+            new docx.TextRun({
+            text: "",
+            }),
+            
+        ],
+        }),
+        new docx.Paragraph({
+        children: [
+            new docx.TextRun({
+            text: loc,
+            italics: italouinon,
+            }),
+            
+        ],
+        }),
+    ],
+    })
+}
+
+// ajout du texte
+doc.addSection({
+properties: {
+           type: docx.SectionType.CONTINUOUS
+        },
+
+  children: [ 
+    new docx.Paragraph({
+      children: [
+        new docx.TextRun({
+          text: TabSeg[s][4],
+          italics: italouinon,
+           
+        }),
+      ],
+    }),
+  ],
+})
+
+}
+
+
+docx.Packer.toBlob(doc).then((blob) => {
+console.log(blob);
+
+let nomf = dossfichext(nomFichText);
+let nomf2 = nomf[1] + ".docx"
+
+
+saveAs(blob, nomf2);
+console.log("Document created successfully");
+});
+
+
+
+
+
+
+}
+
+function exportSonal(){
+
+    var txtRtr;
+    var audio = document.getElementById('lecteur');
+
+    let durée = audio.duration
+    durée = durée.toFixed(0)
+
+    txtRtr = durée + "\r" ;
+
+    txtRtr += "<|OBS|\r \r>|OBS|\r"
+
+    txtRtr += "<|ATTR|\r>|ATTR|\r"
+
+
+    txtRtr += "::0,01::000 Tags= \r"
+
+        for (s=0;s<TabSeg.length;s++){
+
+            if (TabSeg[s][3]>0) {
+            txtRtr += "[>" + locut[TabSeg[s][3]] + "]: "    
+            }
+
+            let tpsdeb = Number(TabSeg[s][1]);
+            if (tpsdeb !=undefined)  {
+                tpsdeb = tpsdeb.toFixed(2);
+                tpsdeb = tpsdeb.replace(".",",")
+            };
+
+            let tpsfin = Number(TabSeg[s][2]);
+            if (tpsfin !=undefined) {  
+                tpsfin = tpsfin.toFixed(2);
+                tpsfin = tpsfin.replace(".",",")
+            };
+
+            let txt = TabSeg[s][4]
+            if (txt != undefined) {
+            txt = txt.replace("<b>"," {+1} ") 
+            txt = txt.replace("</b>"," {-1} ") 
+            txt = txt.replace("{+1} {-1}","")
+
+            }
+
+            txtRtr += "[" + tpsdeb + "] " + txt +  " [" + tpsfin + "]  \r"
+
+
+        }
+
+    txtRtr += "::"  + durée + "::"
+
+
+    let detailsf = dossfichext(nomFichText)
+
+    SauvegarderSurDisque(txtRtr,detailsf[1] + ".Rtr", "ANSI")
+
+
+}
+
+// veille de lecture 
+
+timer = setInterval(function() {
+             
+            calePos()
+},500)
+
+
+function calePos(){
+
+    var audio = document.getElementById('lecteur');
+
+        // etat du lecteur 
+        if (audio.paused == true) {return 0};
+
+
+
+        let poslect = audio.currentTime;
+       
+
+        
+
+        // définition du comportement selon positionnement du lecteur
+
+        // 1 - le segment lu n'a pas changé
+        if (TabSeg[seg_lu][1]<poslect && TabSeg[seg_lu][2]> poslect ) {  return 0} // il ne se passe rien
+
+        // 2 - le segment lu est plus loin que le dernier mémorisé
+        if (TabSeg[seg_lu][2]<poslect ) { 
+              
+            for (s=seg_lu+1;s<TabSeg.length;s++){ // on cherche à la suite
+
+                if (TabSeg[s][1]<poslect && TabSeg[s][2]>= poslect) {
+
+                    //alert("position : " + poslect + "\n segment :" + s + "\n début : " + TabSeg[s][1] + "\n fin : " + TabSeg[s][2] ) 
+
+                    seg_lu= s;
+
+                    mefSegLu(s); 
+                
+                    s = TabSeg.length; // fin de boucle
+
+                }
+
+            }
+
+
+        }     
+
+        // 3 - le segment est avant le dernier mémorisé
+        if (TabSeg[seg_lu][1]>poslect ) { 
+              
+              for (s=seg_lu;s>0;s--){ // on cherche avant
+  
+                  if (TabSeg[s][1]<poslect && TabSeg[s][2]>= poslect) {
+  
+                      seg_lu= s;
+  
+                      mefSegLu(s); 
+                  
+                      s = 0; // fin de boucle
+  
+                  }
+  
+              }
+  
+  
+          }     
+
+        
+
+
+        // contrôle de la lecture (équivalent du "mode dictée" de Sonal)
+        if (dsTxtArea==true) {
+            if (poslect >= TabSeg[seg_cur][2]) {
+                let posdeb = Number(TabSeg[seg_cur][1])
+                posdeb +=0.1
+                audio.currentTime = posdeb ;
+                calePos();
+                audio.pause();
+            } 
+         }
+
+
+}
+
+
+function mefSegLu(seg){  // Mise en forme du segment lu
+    
+           
+
+            // retrait des sélecteurs partout
+            const collection = document.querySelectorAll('.lblseg');
+
+            collection.forEach(btnloc => {
+            btnloc.classList.remove('enlect');
+            });
+
+            let nom = 'sg' + (seg);
+            document.getElementById((nom)).classList.add('enlect');
+
+
+            // retrait des sélecteurs partout
+            const collection2 = document.querySelectorAll('.playr');
+
+            collection2.forEach(btnloc2 => {
+            btnloc2.classList.remove('arrow-visible');
+            });
+
+            let nom2 = 'pl' + (seg);
+            document.getElementById((nom2)).classList.add('arrow-visible');
+}
+
+
+// gestion des glisser déposer
+
+// fichier texte
+
+var holder = document.getElementById('btnfichtext');
+holder.ondragover = function () { this.classList.add('hover'); return false; };
+holder.ondragend = function () { this.classList.remove('hover'); return false; };
+holder.ondrop = function (e) {
+  this.classList.remove('hover');
+  e.preventDefault();
+   
+  lireDrag(e.dataTransfer.files);
+  
+}
+
+// fichier audio
+holder = document.getElementById('btnfichaudio');
+holder.ondragover = function () { this.classList.add('hover'); return false; };
+holder.ondragend = function () { this.classList.remove('hover'); return false; };
+holder.ondrop = function (e) {
+  this.classList.remove('hover');
+  e.preventDefault();
+   
+  lireDrag(e.dataTransfer.files);
+  
+}
+
+
+
+ 
+
+function panfich(pct, bloc) {
+     
+    document.getElementById('accueil').style.height = pct;
+    document.getElementById('selfichiers').style.display = bloc;
+    document.getElementById('imgpanfich').classList.remove("dnone");
+    document.getElementById('menu_rec').classList.remove("dnone");
+    document.getElementById('vit_lect').classList.remove("dnone");
+    document.getElementById('btnfichtext').style.display = bloc;
+    document.getElementById('btnfichaudio').style.display = bloc;
+}
+
+
+function checkok(){
+    if (textok==true && audiook==true) {panfich("0%","none")}
+    
+}
+
+
+// Fonctions de codage thématique
+function stylize(){
+    alert("style")
+var style = document.createElement('style');
+style.type = 'text/css';
+style.innerHTML = '.cssClass { background-color: #f00 !important; }';
+document.getElementsByTagName('head')[0].appendChild(style);
+
+document.getElementById('segmentssuivants').classList.add('cssClass');
+}
+
+</script>
+
+
+
+
+</body>
+
+</html>
